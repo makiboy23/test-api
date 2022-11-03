@@ -6,22 +6,29 @@ class Arrays extends Api_Controller {
 		$post 	= null,
 		$count	= 0;
 
-	public function init() {}
-
 	public function after_init() {
-		if ($this->JSON_POST() && $_SERVER['REQUEST_METHOD'] != 'POST') {
+		if ($this->JSON_POST() && $_SERVER['REQUEST_METHOD'] == 'POST') {
+			$this->post = $this->get_post();
+		} elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+			$this->post = $this->get_url_post();
+		} else {
 			// unauthorized access
 			$this->output->set_status_header(401);	
 		}
-
-		$this->post = $this->get_post();
 	}
 
 	// #2 - SUM AVERAGE
 	private function get_sum_average($arr) {
+		$average	= 'Can\'t get average division by zero, please provide inputs!';
 		$sum 		= array_sum($arr); // sum of array
-		$average 	= array_sum($arr)/count($arr); // average of array
 
+		if ($sum == 0) {
+			goto end;
+		}
+
+		$average = array_sum($arr)/count($arr); // average of array
+
+		end:
 		return array(
 			'sum'		=> $sum,
 			'average'	=> $average
