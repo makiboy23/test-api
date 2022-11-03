@@ -35,8 +35,10 @@ class Api_Controller extends MX_Controller {
 	}
 
 	public function init() {
-		// $this->validate_parent_auth();
-		$this->global_validate_token();
+		// $this->validate_parent_auth(); // post only
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$this->global_validate_token();
+		}
 	}
 
 	public function after_init() {
@@ -93,6 +95,16 @@ class Api_Controller extends MX_Controller {
 
 	public function validate_parent_auth() {
 		$this->global_validate_token();
+	}
+
+	public function get_url_post() {
+		parse_str($_SERVER['QUERY_STRING'], $get); 
+		
+		if (count($get) == 0) {
+			return array();
+		}
+
+		return filter_var_array($get, FILTER_SANITIZE_STRING);
 	}
 
 	public function get_post() {

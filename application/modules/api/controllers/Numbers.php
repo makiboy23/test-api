@@ -5,15 +5,15 @@ class Numbers extends Api_Controller {
 	private
 		$post 	= null;
 
-	public function init() {}
-
 	public function after_init() {
-		if ($this->JSON_POST() && $_SERVER['REQUEST_METHOD'] != 'POST') {
+		if ($this->JSON_POST() && $_SERVER['REQUEST_METHOD'] == 'POST') {
+			$this->post = $this->get_post();
+		} elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+			$this->post = $this->get_url_post();
+		} else {
 			// unauthorized access
 			$this->output->set_status_header(401);	
 		}
-
-		$this->post = $this->get_post();
 	}
 
 	// #1 - RANDOM SHUFFLE
