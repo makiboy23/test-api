@@ -104,7 +104,7 @@ class Api_Controller extends MX_Controller {
 			return array();
 		}
 
-		return filter_var_array($get, FILTER_SANITIZE_STRING);
+		return filter_var_array_sanitize($get);
 	}
 
 	public function get_post() {
@@ -114,7 +114,7 @@ class Api_Controller extends MX_Controller {
 			return array();
 		}
 
-		return filter_var_array($post, FILTER_SANITIZE_STRING);
+		return filter_var_array_sanitize($post);
 	}
 
 	public function JSON_POST() {

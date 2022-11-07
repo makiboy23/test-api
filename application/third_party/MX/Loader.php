@@ -152,12 +152,20 @@ class MX_Loader extends CI_Loader
 	{
 		if (is_array($library)) return $this->libraries($library);
 
-		$class = strtolower(basename($library));
+		if (version_compare(PHP_VERSION, '8.1.0') >= 0) {
+			$class = mb_strtolower($library ?? '');
+		} else {
+			$class = strtolower(basename($library));
+		}
 
 		if (isset($this->_ci_classes[$class]) && $_alias = $this->_ci_classes[$class])
 			return $this;
 
-		($_alias = strtolower($object_name)) OR $_alias = $class;
+		if (version_compare(PHP_VERSION, '8.1.0') >= 0) {
+			($_alias = mb_strtolower($object_name ?? '')) OR $_alias = $class;
+		} else {
+			($_alias = strtolower($object_name)) OR $_alias = $class;
+		}
 
 		list($path, $_library) = Modules::find($library, $this->_module, 'libraries/');
 
@@ -205,7 +213,11 @@ class MX_Loader extends CI_Loader
 			return $this;
 
 		/* check module */
-		list($path, $_model) = Modules::find(strtolower($model), $this->_module, 'models/');
+		if (version_compare(PHP_VERSION, '8.1.0') >= 0) {
+			list($path, $_model) = Modules::find(mb_strtolower($model ?? ''), $this->_module, 'models/');
+		} else {
+			list($path, $_model) = Modules::find(strtolower($model), $this->_module, 'models/');
+		}
 
 		if ($path == FALSE)
 		{
@@ -247,7 +259,12 @@ class MX_Loader extends CI_Loader
 	{
 		if (is_array($module)) return $this->modules($module);
 
-		$_alias = strtolower(basename($module));
+		if (version_compare(PHP_VERSION, '8.1.0') >= 0) {
+			$_alias = mb_strtolower(basename($module) ?? '');
+		} else {
+			$_alias = strtolower(basename($module));
+		}
+
 		CI::$APP->$_alias = Modules::load(array($module => $params));
 		return $this;
 	}
