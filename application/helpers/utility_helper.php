@@ -10,16 +10,23 @@
  * @date created: 05/14/2013 5:33 PM
  */
 
-// ------------------------------------------------------------------------
-if (! function_exists('has_spaces')){
-	function has_spaces($str) {
-		if ($str == trim($str) && strpos($str, ' ') !== false) {
-			return true;
+
+if (! function_exists('filter_var_array_sanitize')){
+	function filter_var_array_sanitize($arr) {
+		$array = [];
+
+		foreach($arr as $value) {
+			if (!is_array($value)) {
+				$array[] = htmlspecialchars($value);
+			} else {
+				$array[] = $value;
+			}
 		}
 
-		return false;
+		return $array;
 	}
 }
+
 
 if (! function_exists('get_milliseconds')){
 	function get_milliseconds() {
